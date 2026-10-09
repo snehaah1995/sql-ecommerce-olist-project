@@ -1,0 +1,161 @@
+
+
+-- Create tables and load data
+
+--create order table
+DROP TABLE IF EXISTS bronze.orders_data;
+CREATE TABLE bronze.orders_data (
+    order_id                       NVARCHAR(50),
+    customer_id                    NVARCHAR(50),
+    order_status                   NVARCHAR(50),
+    order_purchase_timestamp       NVARCHAR(50),
+    order_approved_at              NVARCHAR(50),
+    order_delivered_carrier_date   NVARCHAR(50),
+    order_delivered_customer_date  NVARCHAR(50),
+    order_estimated_delivery_date  NVARCHAR(50)
+);
+
+--load data into bronze.orders_data table
+TRUNCATE TABLE bronze.orders_data;
+BULK INSERT bronze.orders_data
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_orders_dataset.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.orders_data;
+
+
+--create customer table
+DROP TABLE IF EXISTS bronze.customer_data;
+CREATE TABLE bronze.customer_data(
+	customer_id	NVARCHAR(50),
+	customer_unique_id NVARCHAR(50),	
+	customer_zip_code_prefix NVARCHAR(50),
+	customer_city	NVARCHAR(50),
+	customer_state NVARCHAR(10)
+)
+
+--load data into customer_data table
+TRUNCATE TABLE bronze.customer_data;
+BULK INSERT bronze.customer_data
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_customers_dataset.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.customer_data;
+
+
+--creat product table
+DROP TABLE IF EXISTS bronze.product_data
+CREATE TABLE bronze.product_data(
+	product_id	 NVARCHAR(50),
+	Product_Category_Name	NVARCHAR(50),
+	product_name_lenght	INT,
+	product_description_lenght	INT,
+	product_photos_qty	INT,
+	product_weight_g	INT,
+	product_length_cm	INT,
+	product_height_cm	INT,
+	product_width_cm INT
+)
+
+--load  data into bronze.product_data
+TRUNCATE TABLE bronze.product_data;
+BULK INSERT bronze.product_data
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_products_dataset.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.product_data
+
+
+--create table bronze.sellers_data
+DROP TABLE IF EXISTS bronze.sellers_data;
+CREATE TABLE bronze.sellers_data(
+	seller_id NVARCHAR(50) PRIMARY KEY,
+	seller_zip_code_prefix NVARCHAR(10),
+	seller_city	NVARCHAR(50),
+	seller_state NVARCHAR(50)
+);
+
+--insert data into bronze.sellers_data
+TRUNCATE TABLE bronze.sellers_data;
+BULK INSERT bronze.sellers_data
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_sellers_dataset.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.sellers_data;
+
+--create table bronze.order_items
+DROP TABLE IF EXISTS bronze.order_items;
+CREATE TABLE bronze.order_items(
+	order_id NVARCHAR(50),	
+	order_item_id NVARCHAR(50),
+	product_id	NVARCHAR(50),
+	seller_id	NVARCHAR(50),
+	shipping_limit_date	DATE,
+	price	DECIMAL(10,2),
+	freight_value DECIMAL(10,2) 
+);
+
+--load data into  bronze.order_items
+TRUNCATE TABLE bronze.order_items;
+BULK INSERT bronze.order_items
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_order_items_dataset.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.order_items
+
+--create table bronze.order_review
+DROP TABLE IF EXISTS bronze.order_review;
+CREATE TABLE bronze.order_review (
+    review_id                NVARCHAR(50),
+    order_id                 NVARCHAR(50),
+    review_score             NVARCHAR(10),
+    review_comment_title     NVARCHAR(MAX),
+    review_comment_message   NVARCHAR(MAX),
+    review_creation_date     NVARCHAR(50),
+    review_answer_timestamp  NVARCHAR(50)
+);
+
+--load data into table bronze.order_review
+TRUNCATE TABLE bronze.order_review;
+
+BULK INSERT bronze.order_review
+FROM 'C:\Users\LENOVO\OneDrive\Desktop\olist_data1\olist_order_reviews_dataset.csv'
+WITH (
+    FORMAT = 'CSV',
+    FIRSTROW = 2,
+    FIELDQUOTE = '"',
+    CODEPAGE = '65001',
+    TABLOCK
+);
+
+SELECT * FROM bronze.order_review
